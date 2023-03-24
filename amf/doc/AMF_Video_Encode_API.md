@@ -83,7 +83,7 @@ The AMF Video Encoder Component compresses RAW uncompressed video to an H.264 el
 
 The component does not provide a mechanism to handle audio compression, or stream multiplexing.
 
-The component provides four different sets of pre-defined usages, which provide a convenient way for developers to configure the encoder to match the intended application use case. Advanced developers can also adjust encoding parameters to tailor the behavior to their specific application requirements.
+The component provides six different sets of pre-defined usages, which provide a convenient way for developers to configure the encoder to match the intended application use case. Advanced developers can also adjust encoding parameters to tailor the behavior to their specific application requirements.
 
 ### 1.2 Pre-defined Encoder Usages
 
@@ -118,14 +118,14 @@ In the Transcoding mode the encoder needs to accept at least 3 input frames befo
 
 ### 2.2 Encode Parameters
 
-Annex A provides the detailed description of encoding parameters (i.e., encoder properties) exposed by the Video Encoder VCE-AVC component for the following four usages:
+Annex A provides the detailed description of encoding parameters (i.e., encoder properties) exposed by the Video Encoder VCE-AVC component for the following six usages:
 
-- Transcoding mode,
-- Ultra-low latency mode,
-- Low Latency mode,
-- Webcam mode,
-- HQ mode, and
-- HQLL mode.
+- Transcoding mode
+- Ultra-low latency mode
+- Low Latency mode
+- Webcam mode
+- HQ mode
+- HQLL mode
 
 All properties are accessed using the `AMFPropertyStorage` interface of the Encoder object.
 
@@ -734,7 +734,7 @@ Removes/keeps unused LTRs not specified inside the LTR reference bitfield.
    - HQLL: `true`
 
 **Description:**
-Enables low latency mode in the encoder and switches POC mode to `2`.
+Enables low latency mode in the encoder and switches POC (Picture Order count) mode to `2`.
 
 ---
 
@@ -791,7 +791,7 @@ Maximum number of consecutive B Pictures, suggestion set to `3` if `AMF_VIDEO_EN
 `false`
 
 **Description:**
-Disable/Enable Adaptive MiniGOP, can enable with PA enabled.
+Disable/Enable Adaptive MiniGOP.  Works only if `AMF_VIDEO_ENCODER_B_PIC_PATTERN` is not `0`.  Can also be used with PA enabled.
 
 ---
 
@@ -805,7 +805,7 @@ Disable/Enable Adaptive MiniGOP, can enable with PA enabled.
 `false`
 
 **Description:**
-Some encoder properties require this property been set. Enables the pre-analysis module. Refer to *AMF Video PreAnalysis API* reference for more details.
+ Enables the pre-analysis module.  Some encoder properties require this property to be set.  Refer to *AMF Video PreAnalysis API* reference for more details.
 
 ---
 
@@ -1033,10 +1033,10 @@ Sets the peak bitrate.
 
 **Description:**
 Selects the rate control method:
- - CQP – Constrained QP,
- - CBR - Constant Bitrate,
- - VBR - Peak Constrained VBR,
- - VBR_LAT - Latency Constrained VBR,
+ - CQP – Constrained QP
+ - CBR - Constant Bitrate
+ - VBR - Peak Constrained VBR
+ - VBR_LAT - Latency Constrained VBR
  - QVBR – Quality VBR
  - HQVBR – High Quality VBR
  - HQCBR – High Quality CBR
@@ -1169,7 +1169,7 @@ Frame rate numerator.
 `AMF_VIDEO_ENCODER_VBV_BUFFER_SIZE`
 
 **Values:**
-`1000` – `100 000 000`
+`1000` – `100 000 000` bits
 
 **Default Value associated with usages:**
    - Transcoding: `20` mbits
@@ -1268,11 +1268,13 @@ Maximum AU size in bits.
    - HQLL: `4`
 
 **Description:**
-Selects the delta QP of non-reference B pictures with respect to I pictures. This feature is not supported by VCE 1.0.
+Selects the delta QP of non-reference B pictures with respect to I pictures. This feature is not supported by VCE 1.0.\
+
+**Note:**
 `BPicturesDeltaQP`, `ReferenceBPicturesDeltaQP`, `IntraRefreshNumMBsPerSlot`, `BPicturesPattern` and `BReferenceEnable` parameters are available only when:
    - `MaxOfReferenceFrames` is greater than `1`
    - `NumOfLTR` is `0` (LTR is not used)
-
+   - 
 ---
 
 **Name:**
@@ -1291,6 +1293,8 @@ Selects the delta QP of non-reference B pictures with respect to I pictures. Thi
 
 **Description:**
 Selects delta QP of reference B pictures with respect to I pictures. This feature is not supported by VCE 1.0.
+
+**Note:**
 `BPicturesDeltaQP`, `ReferenceBPicturesDeltaQP`, `IntraRefreshNumMBsPerSlot`, `BPicturesPattern` and `BReferenceEnable` parameters are available only when:
    - `MaxOfReferenceFrames` is greater than `1`
    - `NumOfLTR` is `0` (LTR is not used)
@@ -1354,7 +1358,7 @@ Table 7. Encoder picture-control parameters
 `AMF_VIDEO_ENCODER_HEADER_INSERTION_SPACING`
 
 **Values:**
-`0` … `1000`
+`0` … `1000` frames
 
 **Default Value:**
 `0`
@@ -1368,7 +1372,7 @@ Sets the headers insertion spacing.
 `AMF_VIDEO_ENCODER_IDR_PERIOD`
 
 **Values:**
-`0` … `1000`
+`0` … `1000` frames
 
 **Default Value associated with usages:**
    - Transcoding: `30`
@@ -1414,6 +1418,8 @@ Enable/disable the de-blocking filter.
 
 **Description:**
 Sets the number of slices per frame.
+
+**Note:**
 `BPicturesDeltaQP`, `ReferenceBPicturesDeltaQP`, `IntraRefreshNumMBsPerSlot`, `BPicturesPattern` and `BReferenceEnable` parameters are available only when:
    - `MaxOfReferenceFrames` is greater than `1`
    - `NumOfLTR` is `0` (LTR is not used)
@@ -1450,6 +1456,8 @@ Sets the number of slices per frame.
 
 **Description:**
 Sets the number of consecutive B-pictures in a GOP.  BPicturesPattern = `0` indicates that B-pictures are not used. This feature is not supported by VCE 1.0.
+
+**Note:**
 `BPicturesDeltaQP`, `ReferenceBPicturesDeltaQP`, `IntraRefreshNumMBsPerSlot`, `BPicturesPattern` and `BReferenceEnable` parameters are available only when:
    - `MaxOfReferenceFrames` is greater than `1`
    - `NumOfLTR` is `0` (LTR is not used)
@@ -1472,6 +1480,8 @@ Sets the number of consecutive B-pictures in a GOP.  BPicturesPattern = `0` indi
 
 **Description:**
 Enables or disables using B-pictures as references. This feature is not supported by VCE 1.0.
+
+**Note:**
 `BPicturesDeltaQP`, `ReferenceBPicturesDeltaQP`, `IntraRefreshNumMBsPerSlot`, `BPicturesPattern` and `BReferenceEnable` parameters are available only when:
    - `MaxOfReferenceFrames` is greater than `1`
    - `NumOfLTR` is `0` (LTR is not used)
@@ -1488,7 +1498,7 @@ Enables or disables using B-pictures as references. This feature is not supporte
 `AMF_VIDEO_ENCODER_UNDEFINED`
 
 **Description:**
-Encoder coding method, when Undefined is selected, the behavior is profile-specific: CALV for Baseline, CABAC for Main and High.
+Encoder coding method.  When Undefined is selected, the behavior is profile-specific: CALV for Baseline, CABAC for Main and High.
 
 ---
 
